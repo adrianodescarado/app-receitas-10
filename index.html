@@ -1,184 +1,73 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>365 Bolos Sem Glúten, Sem Açúcar e Sem Leite</title>
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <meta charset="UTF-8" />
+  <title>App de Receitas 365</title>
   <style>
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
-      background: #f2f2f2;
-    }
-
-    .login, .app {
-      max-width: 1100px;
-      margin: auto;
+      background: #f4f4f4;
       padding: 20px;
     }
-
-    .login {
-      margin-top: 80px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.1);
+    h1 {
       text-align: center;
     }
-
-    input, button {
-      width: 100%;
-      padding: 14px;
-      margin-top: 12px;
-      font-size: 16px;
-    }
-
-    button {
-      background: #ff7a00;
-      border: none;
-      color: #fff;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #e96f00;
-    }
-
-    .erro {
-      color: red;
-      margin-top: 10px;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    header h1 {
-      margin-bottom: 8px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
-
-    .card {
+    .receita {
       background: #fff;
-      border-radius: 14px;
-      padding: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,.08);
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-
-    .card h2 {
-      margin-top: 0;
-      font-size: 18px;
-      color: #333;
+    .receita h3 {
+      margin: 0 0 5px;
     }
-
-    .info {
-      font-size: 14px;
-      color: #555;
-      margin-bottom: 8px;
-    }
-
-    .label {
-      font-weight: bold;
-      margin-top: 10px;
-      display: block;
-    }
-
   </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div class="login" id="loginBox">
-  <h2>Acesso ao App</h2>
-  <p>Digite a senha para acessar as receitas</p>
-
-  <input type="password" id="senha" placeholder="Senha de acesso">
-  <button onclick="login()">Entrar</button>
-
-  <div class="erro" id="erro"></div>
-</div>
-
-<!-- APP -->
-<div class="app" id="appBox" style="display:none;">
-  <header>
-    <h1>365 Bolos Sem Glúten, Sem Açúcar e Sem Leite</h1>
-    <p>1 bolo por dia, o ano inteiro — sem culpa 🍰</p>
-  </header>
-
-  <div class="grid" id="receitas"></div>
-</div>
+<h1>🍲 Receitas</h1>
+<div id="lista-receitas">Carregando...</div>
 
 <script>
-/* ===============================
-   🔴 TROQUE AQUI – SENHA
-================================ */
-const SENHA_CORRETA = "1950*";
+  // ================================
+  // 🔴 COLE O ID DA SUA PLANILHA AQUI
+  // ================================
+  const SHEET_ID = "1q-B4wKUJtpmjh3MoXae9xR0HVg9EYvsF2QD3guVm_Os";
 
-/* ===============================
-   🔴 TROQUE AQUI – GOOGLE SHEETS
-================================ */
+  // Nome da aba da planilha
+  const SHEET_NAME = "Receitas";
 
-// 👉 COLE AQUI O ID DA SUA PLANILHA
-const SHEET_ID = "1q-B4wKUJtpmjh3MoXae9xR0HVg9EYvsF2QD3guVm_Os";
-
-// 👉 COLE AQUI O NOME DA ABA (EXATO)
-const SHEET_NAME = "Sheet1";
-
-/* ===============================
-   NÃO MEXE DAQUI PRA BAIXO
-================================ */
-
-function login() {
-  const senha = document.getElementById("senha").value;
-
-  if (senha === SENHA_CORRETA) {
-    document.getElementById("loginBox").style.display = "none";
-    document.getElementById("appBox").style.display = "block";
-    carregarReceitas();
-  } else {
-    document.getElementById("erro").innerText = "Senha incorreta";
-  }
-}
-
-function carregarReceitas() {
-  const url = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
+  // URL pública da planilha
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
 
   fetch(url)
-    .then(res => res.json())
-    .then(dados => {
-      const container = document.getElementById("receitas");
+    .then(res => res.text())
+    .then(text => {
+      const json = JSON.parse(text.substring(47).slice(0, -2));
+      const rows = json.table.rows;
+
+      const container = document.getElementById("lista-receitas");
       container.innerHTML = "";
 
-      dados.forEach(r => {
-        container.innerHTML += `
-          <div class="card">
-            <h2>${r.Nome}</h2>
+      rows.forEach(row => {
+        const nome = row.c[0]?.v || "";
+        const descricao = row.c[1]?.v || "";
 
-            <div class="info">⏱ Tempo: ${r.Tempo}</div>
-            <div class="info">🔥 Calorias: ${r.Calorias}</div>
-
-            <span class="label">Ingredientes</span>
-            <div>${r.Ingredientes}</div>
-
-            <span class="label">Modo de Preparo</span>
-            <div>${r.Modo_de_Preparo}</div>
-          </div>
+        const div = document.createElement("div");
+        div.className = "receita";
+        div.innerHTML = `
+          <h3>${nome}</h3>
+          <p>${descricao}</p>
         `;
+        container.appendChild(div);
       });
     })
-    .catch(() => {
-      document.getElementById("receitas").innerHTML =
-        "Erro ao carregar receitas. Verifique a planilha.";
+    .catch(err => {
+      document.getElementById("lista-receitas").innerText =
+        "Erro ao carregar as receitas.";
+      console.error(err);
     });
-}
 </script>
 
 </body>
