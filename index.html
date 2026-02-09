@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>App de Receitas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      padding: 20px;
+    }
+    .login, .app {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .app { display: none; }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+    }
+    .receita {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="login">
+  <h2>Acesso ao App de Receitas</h2>
+  <input type="password" id="senha" placeholder="Digite a senha">
+  <button onclick="login()">Entrar</button>
+  <p id="erro" style="color:red;"></p>
+</div>
+
+<div class="app">
+  <h2>Receitas Disponíveis</h2>
+  <div id="lista"></div>
+</div>
+
+<script>
+const SENHA_CORRETA = "1950*";
+const SHEET_ID = "COLE_AQUI_O_ID_DA_PLANILHA";
+const SHEET_NAME = "Sheet1";
+
+function login() {
+  const senha = document.getElementById("senha").value;
+  if (senha === SENHA_CORRETA) {
+    document.querySelector(".login").style.display = "none";
+    document.querySelector(".app").style.display = "block";
+    carregarReceitas();
+  } else {
+    document.getElementById("erro").innerText = "Senha incorreta";
+  }
+}
+
+function carregarReceitas() {
+  const url = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
+
+  fetch(url)
+    .then(res => res.json())
+    .then(dados => {
+      const lista = document.getElementById("lista");
+      lista.innerHTML = "";
+
+      dados.forEach(r => {
+        lista.innerHTML += `
+          <div class="receita">
+            <h3>${r.Nome}</h3>
+            <strong>Ingredientes:</strong>
+            <p>${r.Ingredientes}</p>
+            <strong>Modo de Preparo:</strong>
+            <p>${r.Modo_de_Preparo}</p>
+          </div>
+        `;
+      });
+    });
+}
+</script>
+
+</body>
+</html>
