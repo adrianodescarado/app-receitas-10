@@ -1,129 +1,114 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Receitas Disponíveis</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+  <meta charset="UTF-8">
+  <title>App de Receitas</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f2f2f2;
-      margin: 0;
+      background: #f7f7f7;
       padding: 20px;
     }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .receita {
-      background: #ffffff;
+    .login, .app {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
       padding: 20px;
-      margin-bottom: 20px;
       border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-
-    .receita h2 {
-      margin-top: 0;
-      color: #222;
+    .app { display: none; }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
     }
-
-    .label {
-      font-weight: bold;
-      margin-top: 12px;
+    .receita {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
     }
-
-    .texto {
-      margin-top: 4px;
-      color: #444;
-      white-space: pre-wrap;
-    }
+    h2 { margin-bottom: 5px; }
+    p { white-space: pre-wrap; }
   </style>
 </head>
-
 <body>
 
-  <h1>Receitas Disponíveis</h1>
+<div class="login">
+  <h2>Acesso ao App de Receitas</h2>
+  <input type="password" id="senha" placeholder="Digite a senha">
+  <button onclick="login()">Entrar</button>
+  <p id="erro" style="color:red;"></p>
+</div>
 
-  <div id="lista-receitas"></div>
+<div class="app">
+  <h2>Receitas Disponíveis</h2>
+  <div id="lista"></div>
+</div>
 
-  <script>
-    const API_URL = "1q-B4wKUJtpmjh3MoXae9xR0HVg9EYvsF2QD3guVm_Os";
+<script>
+const SENHA_CORRETA = "1950*";
+const SHEET_ID = "1_pFHShaxBTM0ZedKy3F0Cmzn2UWjt6gE4H7fc-_ZQOg";
+const SHEET_NAME = "Sheet1";
 
-    fetch(API_URL)
-      .then(response => response.json())
-      .then(data => {
-        const container = document.getElementById("lista-receitas");
+function login() {
+  const senha = document.getElementById("senha").value;
+  if (senha === SENHA_CORRETA) {
+    document.querySelector(".login").style.display = "none";
+    document.querySelector(".app").style.display = "block";
+    carregarReceitas();
+  } else {
+    document.getElementById("erro").innerText = "Senha incorreta";
+  }
+}
 
-        data.forEach(item => {
-          const nome =
-            item.nome_receita ||
-            item["Nome da Receita"] ||
-            item["nome da receita"] ||
-            item.nome ||
-            "Receita sem nome";
+function carregarReceitas() {
+  const url = `https://opensheet.elk.sh/${SHEET_ID}/${SHEET_NAME}`;
 
-          const ingredientes =
-            item.ingredientes ||
-            item["Ingredientes"] ||
-            "-";
+  fetch(url)
+    .then(res => res.json())
+    .then(dados => {
+      const lista = document.getElementById("lista");
+      lista.innerHTML = "";
 
-          const modo =
-            item.modo_preparo ||
-            item["Modo de Preparo"] ||
-            item["modo de preparo"] ||
-            "-";
+      dados.forEach(r => {
+        const nome =
+          r.nome_receita ||
+          r.Nome ||
+          r["Nome da Receita"] ||
+          r["nome da receita"] ||
+          "Receita sem nome";
 
-          const tempo =
-            item.tempo_preparo ||
-            item["Tempo de Preparo"] ||
-            "-";
+        const ingredientes =
+          r.ingredientes ||
+          r.Ingredientes ||
+          "-";
 
-          const rendimento =
-            item.rendimento ||
-            item["Rendimento"] ||
-            "-";
+        const modo =
+          r.modo_preparo ||
+          r.Modo_de_Preparo ||
+          r["Modo de Preparo"] ||
+          "-";
 
-          const observacoes =
-            item.observacoes ||
-            item["Observações"] ||
-            item["observacoes"] ||
-            "-";
-
-          const div = document.createElement("div");
-          div.className = "receita";
-
-          div.innerHTML = `
+        lista.innerHTML += `
+          <div class="receita">
             <h2>${nome}</h2>
-
-            <div class="label">Ingredientes:</div>
-            <div class="texto">${ingredientes}</div>
-
-            <div class="label">Modo de Preparo:</div>
-            <div class="texto">${modo}</div>
-
-            <div class="label">Tempo de Preparo:</div>
-            <div class="texto">${tempo}</div>
-
-            <div class="label">Rendimento:</div>
-            <div class="texto">${rendimento}</div>
-
-            <div class="label">Observações:</div>
-            <div class="texto">${observacoes}</div>
-          `;
-
-          container.appendChild(div);
-        });
-      })
-      .catch(error => {
-        document.getElementById("lista-receitas").innerHTML =
-          "<p>Erro ao carregar receitas.</p>";
-        console.error(error);
+            <strong>Ingredientes:</strong>
+            <p>${ingredientes}</p>
+            <strong>Modo de Preparo:</strong>
+            <p>${modo}</p>
+          </div>
+        `;
       });
-  </script>
+    })
+    .catch(err => {
+      document.getElementById("lista").innerHTML =
+        "<p>Erro ao carregar receitas.</p>";
+      console.error(err);
+    });
+}
+</script>
 
 </body>
 </html>
