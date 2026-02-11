@@ -6,25 +6,31 @@
 <title>App-365 Bolos</title>
 
 <style>
-body {
-  margin: 0;
+* {
+  box-sizing: border-box;
   font-family: Arial, Helvetica, sans-serif;
-  background: linear-gradient(180deg, #ff9800, #ffcc80);
 }
 
+body {
+  margin: 0;
+  background: #f2f2f2;
+}
+
+/* ===== LOGIN ===== */
 #login {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  background: #f2f2f2;
 }
 
 .login-box {
-  background: #fff;
+  background: #ffffff;
   padding: 30px;
   border-radius: 16px;
-  text-align: center;
   width: 320px;
+  text-align: center;
 }
 
 .login-box h1 {
@@ -34,8 +40,8 @@ body {
 .login-box input {
   width: 100%;
   padding: 14px;
-  margin: 15px 0;
   font-size: 16px;
+  margin: 15px 0;
 }
 
 .login-box button {
@@ -49,8 +55,11 @@ body {
   cursor: pointer;
 }
 
+/* ===== APP ===== */
 #app {
   display: none;
+  background: #f2f2f2;
+  min-height: 100vh;
 }
 
 header {
@@ -77,8 +86,10 @@ header {
 
 .emoji {
   font-size: 48px;
+  margin-bottom: 10px;
 }
 
+/* ===== MODAL ===== */
 .modal {
   display: none;
   position: fixed;
@@ -100,11 +111,26 @@ header {
   cursor: pointer;
   font-size: 20px;
 }
+
+/* ===== INSTALL BUTTON ===== */
+#installBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #ff9800;
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 30px;
+  display: none;
+  cursor: pointer;
+  font-size: 14px;
+}
 </style>
 </head>
 
 <body>
 
+<!-- LOGIN -->
 <div id="login">
   <div class="login-box">
     <h1>🎂 App-365 Bolos</h1>
@@ -113,6 +139,7 @@ header {
   </div>
 </div>
 
+<!-- APP -->
 <div id="app">
   <header>
     <h2>365 Bolos Sem Glúten, Sem Açúcar e Sem Leite</h2>
@@ -122,11 +149,15 @@ header {
   <div class="grid" id="lista"></div>
 </div>
 
+<!-- MODAL -->
 <div class="modal" id="modal">
   <div class="modal-content" id="modalContent">
     <span class="close" onclick="fechar()">✖</span>
   </div>
 </div>
+
+<!-- INSTALL -->
+<div id="installBtn" onclick="instalar()">📲 Instalar App</div>
 
 <script>
 const SHEET_ID = "1q-B4wKUJtpmjh3MoXae9xR0HVg9EYvsF2QD3guVm_Os";
@@ -134,7 +165,9 @@ const ABA = "sheet1";
 const URL = `https://opensheet.elk.sh/${SHEET_ID}/${ABA}`;
 
 let receitas = [];
+let deferredPrompt = null;
 
+/* ===== LOGIN ===== */
 function entrar() {
   if (document.getElementById("senha").value === "1950*") {
     document.getElementById("login").style.display = "none";
@@ -145,17 +178,19 @@ function entrar() {
   }
 }
 
-function emojiPorCategoria(nome) {
+/* ===== EMOJIS ===== */
+function emojiPorNome(nome) {
   nome = nome.toLowerCase();
   if (nome.includes("chocolate")) return "🍫";
   if (nome.includes("banana")) return "🍌";
   if (nome.includes("laranja")) return "🍊";
   if (nome.includes("cenoura")) return "🥕";
-  if (nome.includes("maçã")) return "🍎";
   if (nome.includes("coco")) return "🥥";
+  if (nome.includes("maçã")) return "🍎";
   return "🎂";
 }
 
+/* ===== LOAD ===== */
 function carregar() {
   fetch(URL)
     .then(r => r.json())
@@ -168,7 +203,7 @@ function carregar() {
         const card = document.createElement("div");
         card.className = "card";
         card.innerHTML = `
-          <div class="emoji">${emojiPorCategoria(r.nome)}</div>
+          <div class="emoji">${emojiPorNome(r.nome)}</div>
           <strong>${r.nome}</strong>
         `;
         card.onclick = () => abrir(i);
@@ -177,11 +212,12 @@ function carregar() {
     });
 }
 
+/* ===== MODAL ===== */
 function abrir(i) {
   const r = receitas[i];
   document.getElementById("modalContent").innerHTML = `
     <span class="close" onclick="fechar()">✖</span>
-    <h2>${emojiPorCategoria(r.nome)} ${r.nome}</h2>
+    <h2>${emojiPorNome(r.nome)} ${r.nome}</h2>
     <p><b>Identificação:</b> ${r.identificacao}</p>
     <p><b>Ingredientes:</b> ${r.ingredientes}</p>
     <p><b>Tempo:</b> ${r.tempo}</p>
@@ -198,6 +234,23 @@ function abrir(i) {
 
 function fechar() {
   document.getElementById("modal").style.display = "none";
+}
+
+/* ===== INSTALL APP (PWA) ===== */
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById("installBtn").style.display = "block";
+});
+
+function instalar() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => {
+      deferredPrompt = null;
+      document.getElementById("installBtn").style.display = "none";
+    });
+  }
 }
 </script>
 
