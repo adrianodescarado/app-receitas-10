@@ -1,219 +1,203 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>365 Bolos</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>App-365 Bolos</title>
 
 <style>
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(180deg,#ffa000,#ffcc80);
-}
-
-header {
-  background:#ff9800;
-  color:#fff;
-  text-align:center;
-  padding:20px;
-}
-
-header h1 {
-  margin:0;
-}
-
-header p {
-  margin:5px 0 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(180deg, #ff9800, #ffcc80);
 }
 
 #login {
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:60vh;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-#login input {
-  padding:12px;
-  font-size:16px;
-  border-radius:6px;
-  border:none;
-  margin-right:10px;
+.login-box {
+  background: #fff;
+  padding: 30px;
+  border-radius: 16px;
+  text-align: center;
+  width: 320px;
 }
 
-#login button {
-  padding:12px 20px;
-  font-size:16px;
-  border:none;
-  border-radius:6px;
-  background:#ff9800;
-  color:#fff;
-  cursor:pointer;
+.login-box h1 {
+  margin-bottom: 10px;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 14px;
+  margin: 15px 0;
+  font-size: 16px;
+}
+
+.login-box button {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  background: #ff9800;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
 #app {
-  display:none;
-  padding:20px;
+  display: none;
+}
+
+header {
+  background: #ff9800;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
 }
 
 .grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-  gap:20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+  padding: 20px;
 }
 
 .card {
-  background:#fff;
-  border-radius:12px;
-  overflow:hidden;
-  box-shadow:0 4px 10px rgba(0,0,0,.15);
-  cursor:pointer;
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
 }
 
-.card img {
-  width:100%;
-  height:160px;
-  object-fit:cover;
+.emoji {
+  font-size: 48px;
 }
 
-.card h3 {
-  padding:10px;
-  margin:0;
-  font-size:16px;
-  text-align:center;
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  overflow-y: auto;
 }
 
-/* Modal */
-#modal {
-  display:none;
-  position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
-  background:rgba(0,0,0,.6);
-  overflow:auto;
-}
-
-#modalContent {
-  background:#fff;
-  margin:40px auto;
-  padding:20px;
-  max-width:700px;
-  border-radius:12px;
-}
-
-#modalContent img {
-  width:100%;
-  border-radius:10px;
-  margin-bottom:15px;
+.modal-content {
+  background: #fff;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 600px;
 }
 
 .close {
-  float:right;
-  font-size:22px;
-  cursor:pointer;
-}
-.section {
-  margin-bottom:12px;
-}
-.section strong {
-  display:block;
-  margin-bottom:4px;
+  float: right;
+  cursor: pointer;
+  font-size: 20px;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-  <h1>365 Bolos Sem Glúten, Sem Açúcar e Sem Leite</h1>
-  <p>1 bolo por dia, o ano inteiro — sem culpa</p>
-</header>
-
 <div id="login">
-  <input type="password" id="senha" placeholder="Digite a senha">
-  <button onclick="entrar()">Entrar</button>
+  <div class="login-box">
+    <h1>🎂 App-365 Bolos</h1>
+    <input type="password" id="senha" placeholder="Digite a senha">
+    <button onclick="entrar()">Entrar</button>
+  </div>
 </div>
 
 <div id="app">
-  <div class="grid" id="grid"></div>
+  <header>
+    <h2>365 Bolos Sem Glúten, Sem Açúcar e Sem Leite</h2>
+    <p>1 bolo por dia, o ano inteiro — sem culpa</p>
+  </header>
+
+  <div class="grid" id="lista"></div>
 </div>
 
-<div id="modal">
-  <div id="modalContent">
+<div class="modal" id="modal">
+  <div class="modal-content" id="modalContent">
     <span class="close" onclick="fechar()">✖</span>
-    <div id="detalhes"></div>
   </div>
 </div>
 
 <script>
-const SENHA = "1950*";
 const SHEET_ID = "1q-B4wKUJtpmjh3MoXae9xR0HVg9EYvsF2QD3guVm_Os";
 const ABA = "sheet1";
+const URL = `https://opensheet.elk.sh/${SHEET_ID}/${ABA}`;
 
-function entrar(){
-  if(document.getElementById("senha").value === SENHA){
-    document.getElementById("login").style.display="none";
-    document.getElementById("app").style.display="block";
+let receitas = [];
+
+function entrar() {
+  if (document.getElementById("senha").value === "1950*") {
+    document.getElementById("login").style.display = "none";
+    document.getElementById("app").style.display = "block";
     carregar();
   } else {
     alert("Senha incorreta");
   }
 }
 
-function carregar(){
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${ABA}`;
-  fetch(url)
-    .then(res => res.text())
-    .then(text => {
-      const json = JSON.parse(text.substr(47).slice(0,-2));
-      const cols = json.table.cols.map(c => c.label);
-      const rows = json.table.rows.map(r => {
-        let obj = {};
-        r.c.forEach((cell,i)=>{
-          obj[cols[i]] = cell ? cell.v : "";
-        });
-        return obj;
+function emojiPorCategoria(nome) {
+  nome = nome.toLowerCase();
+  if (nome.includes("chocolate")) return "🍫";
+  if (nome.includes("banana")) return "🍌";
+  if (nome.includes("laranja")) return "🍊";
+  if (nome.includes("cenoura")) return "🥕";
+  if (nome.includes("maçã")) return "🍎";
+  if (nome.includes("coco")) return "🥥";
+  return "🎂";
+}
+
+function carregar() {
+  fetch(URL)
+    .then(r => r.json())
+    .then(d => {
+      receitas = d;
+      const lista = document.getElementById("lista");
+      lista.innerHTML = "";
+
+      d.forEach((r, i) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="emoji">${emojiPorCategoria(r.nome)}</div>
+          <strong>${r.nome}</strong>
+        `;
+        card.onclick = () => abrir(i);
+        lista.appendChild(card);
       });
-      render(rows);
     });
 }
 
-function render(dados){
-  const grid = document.getElementById("grid");
-  grid.innerHTML = "";
-  dados.forEach(item=>{
-    const card = document.createElement("div");
-    card.className="card";
-    card.innerHTML=`
-      <img src="${item.imagem}" onerror="this.src='https://picsum.photos/600/400?random=${Math.random()}'">
-      <h3>${item.nome}</h3>
-    `;
-    card.onclick=()=>abrir(item);
-    grid.appendChild(card);
-  });
-}
-
-function abrir(i){
-  document.getElementById("modal").style.display="block";
-  document.getElementById("detalhes").innerHTML=`
-    <img src="${i.imagem}" onerror="this.src='https://picsum.photos/600/400?random=${Math.random()}'">
-
-    <div class="section"><strong>Identificação</strong>${i.identificacao}</div>
-    <div class="section"><strong>Ingredientes</strong>${i.ingredientes}</div>
-    <div class="section"><strong>Tempo</strong>${i.tempo}</div>
-    <div class="section"><strong>Temperatura</strong>${i.temperatura}</div>
-    <div class="section"><strong>Modo de Preparo</strong>${i.modo_preparo}</div>
-    <div class="section"><strong>Técnicas Utilizadas</strong>${i.tecnicas}</div>
-    <div class="section"><strong>Rendimento</strong>${i.rendimento}</div>
-    <div class="section"><strong>Dificuldade</strong>${i.dificuldade}</div>
-    <div class="section"><strong>Categoria</strong>${i.categoria}</div>
-    <div class="section"><strong>Observações</strong>${i.observacoes}</div>
+function abrir(i) {
+  const r = receitas[i];
+  document.getElementById("modalContent").innerHTML = `
+    <span class="close" onclick="fechar()">✖</span>
+    <h2>${emojiPorCategoria(r.nome)} ${r.nome}</h2>
+    <p><b>Identificação:</b> ${r.identificacao}</p>
+    <p><b>Ingredientes:</b> ${r.ingredientes}</p>
+    <p><b>Tempo:</b> ${r.tempo}</p>
+    <p><b>Temperatura:</b> ${r.temperatura}</p>
+    <p><b>Modo de Preparo:</b> ${r.modo_preparo}</p>
+    <p><b>Técnicas:</b> ${r.tecnicas}</p>
+    <p><b>Rendimento:</b> ${r.rendimento}</p>
+    <p><b>Dificuldade:</b> ${r.dificuldade}</p>
+    <p><b>Categoria:</b> ${r.categoria}</p>
+    <p><b>Observações:</b> ${r.observacoes}</p>
   `;
+  document.getElementById("modal").style.display = "block";
 }
 
-function fechar(){
-  document.getElementById("modal").style.display="none";
+function fechar() {
+  document.getElementById("modal").style.display = "none";
 }
 </script>
 
