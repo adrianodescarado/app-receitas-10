@@ -1,241 +1,163 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>App-365 Bolos</title>
+  <meta charset="UTF-8" />
+  <title>365 Bolos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-* {
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
-}
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #FFA726, #FFCC80);
+    }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #ff9800, #ffcc80);
-}
+    header {
+      background: #FB8C00;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
 
-/* LOGIN */
-#login {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
 
-.login-box {
-  background: #ffffff;
-  width: 100%;
-  max-width: 420px;
-  padding: 32px;
-  border-radius: 18px;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.25);
-  text-align: center;
-}
+    header p {
+      margin: 5px 0 0;
+      font-size: 14px;
+    }
 
-.login-box h1 {
-  margin-bottom: 10px;
-  font-size: 28px;
-  color: #ff9800;
-}
+    #login {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 70vh;
+    }
 
-.login-box p {
-  color: #555;
-  margin-bottom: 20px;
-}
+    #login input {
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 10px;
+      width: 220px;
+      border: none;
+      border-radius: 5px;
+    }
 
-.login-box input {
-  width: 100%;
-  padding: 16px;
-  font-size: 18px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  margin-bottom: 20px;
-}
+    #login button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background: #FB8C00;
+      color: white;
+      cursor: pointer;
+    }
 
-.login-box button {
-  width: 100%;
-  padding: 16px;
-  font-size: 18px;
-  border: none;
-  border-radius: 10px;
-  background: #ff9800;
-  color: #fff;
-  cursor: pointer;
-}
+    #conteudo {
+      display: none;
+      padding: 20px;
+    }
 
-.login-box button:hover {
-  background: #fb8c00;
-}
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
 
-/* APP */
-#app {
-  display: none;
-}
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
 
-header {
-  background: #ff9800;
-  color: #fff;
-  padding: 20px;
-  text-align: center;
-}
+    .card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
 
-header h2 {
-  margin: 0;
-}
+    .card h3 {
+      margin: 10px 0 5px;
+      font-size: 18px;
+    }
 
-header span {
-  font-size: 14px;
-  opacity: 0.9;
-}
-
-/* GRID */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 16px;
-  padding: 16px;
-}
-
-.card {
-  background: #fff;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-  cursor: pointer;
-}
-
-.card img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-}
-
-.card h3 {
-  padding: 12px;
-  margin: 0;
-  font-size: 18px;
-}
-
-/* DETALHE */
-#detalhe {
-  display: none;
-  padding: 16px;
-}
-
-#detalhe img {
-  width: 100%;
-  max-height: 300px;
-  object-fit: cover;
-  border-radius: 14px;
-  margin-bottom: 16px;
-}
-
-.voltar {
-  background: #ff9800;
-  color: #fff;
-  border: none;
-  padding: 12px 18px;
-  border-radius: 8px;
-  margin-bottom: 16px;
-  cursor: pointer;
-}
-
-@media (max-width: 600px) {
-  .login-box {
-    margin: 16px;
-  }
-}
-</style>
+    .card p {
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
-<div id="login">
-  <div class="login-box">
-    <h1>🎂 App-365 Bolos</h1>
-    <p>Digite a senha para acessar</p>
-    <input type="password" id="senha" placeholder="Senha">
-    <button onclick="entrar()">Entrar</button>
-  </div>
-</div>
-
-<!-- APP -->
-<div id="app">
   <header>
-    <h2>365 Bolos Sem Glúten, Sem Açúcar e Sem Leite</h2>
-    <span>1 bolo por dia, o ano inteiro — sem culpa</span>
+    <h1>365 Bolos Sem Glúten, Sem Açúcar e Sem Leite</h1>
+    <p>1 bolo por dia, o ano inteiro — sem culpa</p>
   </header>
 
-  <div class="grid" id="lista"></div>
-
-  <div id="detalhe">
-    <button class="voltar" onclick="voltar()">⬅ Voltar</button>
-    <img id="imgDetalhe">
-    <h2 id="tituloDetalhe"></h2>
-    <p id="conteudoDetalhe"></p>
+  <!-- LOGIN -->
+  <div id="login">
+    <h2>🔒 App-365 Bolo 🍰</h2>
+    <input type="password" id="senha" placeholder="Digite a senha" />
+    <button onclick="verificarSenha()">Entrar</button>
   </div>
-</div>
 
-<script>
-function entrar() {
-  const senha = document.getElementById("senha").value;
-  if (senha === "1950*") {
-    document.getElementById("login").style.display = "none";
-    document.getElementById("app").style.display = "block";
-    carregar();
-  } else {
-    alert("Senha incorreta");
-  }
-}
+  <!-- CONTEÚDO -->
+  <div id="conteudo">
+    <div id="receitas" class="grid"></div>
+  </div>
 
-/* ====== CONFIGURAÇÃO DO SHEET ====== */
-const SHEET_ID = "1q-B4wKUJtpmjh3MoXae9xR0HVg9EYvsF2QD3guVm_Os";
-const ABA = "Página1";
+  <script>
+    // 🔴 COLE AQUI O ID DO SEU GOOGLE SHEET
+    const SHEET_ID = "1q-B4wKUJtpmjh3MoXae9xR0HVg9EYvsF2QD3guVm_Os";
+    const ABA = "Página1";
 
-function carregar() {
-  fetch(`https://opensheet.elk.sh/${SHEET_ID}/${ABA}`)
-    .then(res => res.json())
-    .then(dados => {
-      const lista = document.getElementById("lista");
-      lista.innerHTML = "";
+    function verificarSenha() {
+      const senhaDigitada = document.getElementById("senha").value;
 
-      dados.forEach((r, i) => {
-        if (!r.nome_receita) return;
+      if (senhaDigitada === "1950*") {
+        document.getElementById("login").style.display = "none";
+        document.getElementById("conteudo").style.display = "block";
 
-        const img = r.imagem && r.imagem.startsWith("http")
-          ? r.imagem
-          : `https://picsum.photos/seed/bolo${i}/600/400`;
+        // 🔥 AGORA SIM CARREGA O SHEET
+        carregarReceitas();
+      } else {
+        alert("Senha incorreta");
+      }
+    }
 
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `
-          <img src="${img}">
-          <h3>${r.nome_receita}</h3>
-        `;
-        card.onclick = () => abrir(r, img);
-        lista.appendChild(card);
-      });
-    });
-}
+    async function carregarReceitas() {
+      try {
+        const url = `https://opensheet.elk.sh/${SHEET_ID}/${ABA}`;
+        const response = await fetch(url);
+        const data = await response.json();
 
-function abrir(r, img) {
-  document.getElementById("lista").style.display = "none";
-  document.getElementById("detalhe").style.display = "block";
-  document.getElementById("imgDetalhe").src = img;
-  document.getElementById("tituloDetalhe").innerText = r.nome_receita;
-  document.getElementById("conteudoDetalhe").innerText =
-    `🧾 Ingredientes:\n${r.ingredientes}\n\n👩‍🍳 Modo de preparo:\n${r.modo_preparo}\n\n⏱ Tempo: ${r.tempo}\n🔥 Calorias: ${r.calorias}`;
-}
+        const container = document.getElementById("receitas");
+        container.innerHTML = "";
 
-function voltar() {
-  document.getElementById("detalhe").style.display = "none";
-  document.getElementById("lista").style.display = "grid";
-}
-</script>
+        data.forEach((item, index) => {
+          const termoImagem = item.nome || "bolo saudável";
+          const imagem = `https://picsum.photos/400/300?random=${index}&${encodeURIComponent(termoImagem)}`;
+
+          container.innerHTML += `
+            <div class="card">
+              <img src="${imagem}" alt="${item.nome}">
+              <h3>${item.nome}</h3>
+              <p>${item.descricao}</p>
+            </div>
+          `;
+        });
+      } catch (e) {
+        alert("Erro ao carregar receitas");
+        console.error(e);
+      }
+    }
+  </script>
 
 </body>
 </html>
