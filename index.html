@@ -28,8 +28,13 @@ body {
   text-align: center;
 }
 
-.login-box h1 {
+.bolo-grande {
+  font-size: 72px;
   margin-bottom: 10px;
+}
+
+.login-box h1 {
+  margin: 10px 0;
 }
 
 .login-box input {
@@ -81,27 +86,31 @@ header {
   font-size: 48px;
 }
 
-/* MODAL */
+/* MODAL – compatível Android */
 .modal {
   display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  overflow-y: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100vh;
+  background: rgba(0,0,0,0.7);
+  z-index: 9999;
+  padding: 20px;
 }
 
 .modal-content {
   background: #fff;
-  margin: 40px auto;
   padding: 20px;
   border-radius: 12px;
   max-width: 600px;
+  margin: 20px auto;
 }
 
 .close {
-  float: right;
   font-size: 20px;
   cursor: pointer;
+  float: right;
 }
 </style>
 </head>
@@ -110,7 +119,8 @@ header {
 
 <div id="login">
   <div class="login-box">
-    <h1>🎂 App-365 Bolos</h1>
+    <div class="bolo-grande">🎂</div>
+    <h1>App-365 Bolos</h1>
     <input type="password" id="senha" placeholder="Digite a senha">
     <button onclick="entrar()">Entrar</button>
   </div>
@@ -126,9 +136,7 @@ header {
 </div>
 
 <div class="modal" id="modal">
-  <div class="modal-content" id="modalContent">
-    <span class="close" onclick="fechar()">✖</span>
-  </div>
+  <div class="modal-content" id="modalContent"></div>
 </div>
 
 <script>
@@ -182,6 +190,7 @@ function render() {
 
 function abrir(i) {
   const r = receitas[i];
+
   document.getElementById("modalContent").innerHTML = `
     <span class="close" onclick="fechar()">✖</span>
     <h2>${emoji(r.nome)} ${r.nome}</h2>
@@ -196,6 +205,7 @@ function abrir(i) {
     <p><b>Categoria:</b> ${r.categoria}</p>
     <p><b>Observações:</b> ${r.observacoes}</p>
   `;
+
   document.getElementById("modal").style.display = "block";
 }
 
