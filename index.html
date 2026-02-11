@@ -1,223 +1,220 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>App-365 Bolos</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>365 Bolos</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: Arial, Helvetica, sans-serif;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(180deg,#ffa000,#ffcc80);
+}
 
-    body {
-      margin: 0;
-      background: linear-gradient(135deg, #ff9800, #ffcc80);
-      min-height: 100vh;
-    }
+header {
+  background:#ff9800;
+  color:#fff;
+  text-align:center;
+  padding:20px;
+}
 
-    /* LOGIN */
-    #login {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+header h1 {
+  margin:0;
+}
 
-    .login-box {
-      background: #fff;
-      padding: 30px;
-      border-radius: 16px;
-      width: 100%;
-      max-width: 420px;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
+header p {
+  margin:5px 0 0;
+}
 
-    .login-box h1 {
-      margin-bottom: 10px;
-      color: #ff9800;
-      font-size: 28px;
-    }
+#login {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:60vh;
+}
 
-    .login-box p {
-      color: #555;
-    }
+#login input {
+  padding:12px;
+  font-size:16px;
+  border-radius:6px;
+  border:none;
+  margin-right:10px;
+}
 
-    .login-box input {
-      width: 100%;
-      padding: 16px;
-      font-size: 18px;
-      margin: 20px 0;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-    }
+#login button {
+  padding:12px 20px;
+  font-size:16px;
+  border:none;
+  border-radius:6px;
+  background:#ff9800;
+  color:#fff;
+  cursor:pointer;
+}
 
-    .login-box button {
-      width: 100%;
-      padding: 16px;
-      font-size: 18px;
-      border: none;
-      border-radius: 10px;
-      background: #ff9800;
-      color: #fff;
-      cursor: pointer;
-    }
+#app {
+  display:none;
+  padding:20px;
+}
 
-    /* APP */
-    #app {
-      display: none;
-    }
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:20px;
+}
 
-    header {
-      background: #ff9800;
-      color: #fff;
-      padding: 20px;
-      text-align: center;
-    }
+.card {
+  background:#fff;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 4px 10px rgba(0,0,0,.15);
+  cursor:pointer;
+}
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 16px;
-      padding: 20px;
-    }
+.card img {
+  width:100%;
+  height:160px;
+  object-fit:cover;
+}
 
-    .card {
-      background: #fff;
-      border-radius: 14px;
-      overflow: hidden;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
+.card h3 {
+  padding:10px;
+  margin:0;
+  font-size:16px;
+  text-align:center;
+}
 
-    .card img {
-      width: 100%;
-      height: 120px;
-      object-fit: cover;
-    }
+/* Modal */
+#modal {
+  display:none;
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  background:rgba(0,0,0,.6);
+  overflow:auto;
+}
 
-    .card h3 {
-      padding: 10px;
-      font-size: 16px;
-      text-align: center;
-    }
+#modalContent {
+  background:#fff;
+  margin:40px auto;
+  padding:20px;
+  max-width:700px;
+  border-radius:12px;
+}
 
-    /* MODAL */
-    #modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-      padding: 20px;
-      overflow-y: auto;
-    }
+#modalContent img {
+  width:100%;
+  border-radius:10px;
+  margin-bottom:15px;
+}
 
-    .modal-box {
-      background: #fff;
-      max-width: 600px;
-      margin: auto;
-      padding: 20px;
-      border-radius: 16px;
-    }
-
-    .modal-box img {
-      width: 100%;
-      border-radius: 12px;
-      margin-bottom: 15px;
-    }
-
-    .close {
-      text-align: right;
-      font-weight: bold;
-      cursor: pointer;
-      margin-bottom: 10px;
-    }
-  </style>
+.close {
+  float:right;
+  font-size:22px;
+  cursor:pointer;
+}
+.section {
+  margin-bottom:12px;
+}
+.section strong {
+  display:block;
+  margin-bottom:4px;
+}
+</style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
+<header>
+  <h1>365 Bolos Sem Glúten, Sem Açúcar e Sem Leite</h1>
+  <p>1 bolo por dia, o ano inteiro — sem culpa</p>
+</header>
+
 <div id="login">
-  <div class="login-box">
-    <h1>🎂 App-365 Bolos</h1>
-    <p>Digite a senha para acessar</p>
-    <input type="password" id="senha" placeholder="Senha" />
-    <button onclick="entrar()">Entrar</button>
-  </div>
+  <input type="password" id="senha" placeholder="Digite a senha">
+  <button onclick="entrar()">Entrar</button>
 </div>
 
-<!-- APP -->
 <div id="app">
-  <header>
-    <h2>365 Bolos Sem Glúten, Sem Açúcar e Sem Leite</h2>
-    <span>1 bolo por dia, o ano inteiro — sem culpa</span>
-  </header>
-
   <div class="grid" id="grid"></div>
 </div>
 
-<!-- MODAL -->
 <div id="modal">
-  <div class="modal-box" id="modalContent"></div>
+  <div id="modalContent">
+    <span class="close" onclick="fechar()">✖</span>
+    <div id="detalhes"></div>
+  </div>
 </div>
 
 <script>
-  const SENHA_CORRETA = "1950*";
-  const SHEET_ID = "1q-B4wKUJtpmjh3MoXae9xR0HVg9EYvsF2QD3guVm_Os";
-  const ABA = "sheet1";
+const SENHA = "1950*";
+const SHEET_ID = "1q-B4wKUJtpmjh3MoXae9xR0HVg9EYvsF2QD3guVm_Os";
+const ABA = "sheet1";
 
-  function entrar() {
-    const senha = document.getElementById("senha").value;
-    if (senha === SENHA_CORRETA) {
-      document.getElementById("login").style.display = "none";
-      document.getElementById("app").style.display = "block";
-      carregarReceitas();
-    } else {
-      alert("Senha incorreta");
-    }
+function entrar(){
+  if(document.getElementById("senha").value === SENHA){
+    document.getElementById("login").style.display="none";
+    document.getElementById("app").style.display="block";
+    carregar();
+  } else {
+    alert("Senha incorreta");
   }
+}
 
-  async function carregarReceitas() {
-    const url = `https://opensheet.elk.sh/${SHEET_ID}/${ABA}`;
-    const res = await fetch(url);
-    const dados = await res.json();
-
-    const grid = document.getElementById("grid");
-    grid.innerHTML = "";
-
-    dados.forEach(r => {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `
-        <img src="${r.imagem}">
-        <h3>${r.nome}</h3>
-      `;
-      card.onclick = () => abrirModal(r);
-      grid.appendChild(card);
+function carregar(){
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${ABA}`;
+  fetch(url)
+    .then(res => res.text())
+    .then(text => {
+      const json = JSON.parse(text.substr(47).slice(0,-2));
+      const cols = json.table.cols.map(c => c.label);
+      const rows = json.table.rows.map(r => {
+        let obj = {};
+        r.c.forEach((cell,i)=>{
+          obj[cols[i]] = cell ? cell.v : "";
+        });
+        return obj;
+      });
+      render(rows);
     });
-  }
+}
 
-  function abrirModal(r) {
-    document.getElementById("modal").style.display = "block";
-    document.getElementById("modalContent").innerHTML = `
-      <div class="close" onclick="fecharModal()">✖ Fechar</div>
-      <img src="${r.imagem}">
-      <h2>${r.nome}</h2>
-      <p><b>Ingredientes:</b><br>${r.ingredientes}</p>
-      <p><b>Tempo:</b> ${r.tempo}</p>
-      <p><b>Temperatura:</b> ${r.temperatura}</p>
-      <p><b>Modo de preparo:</b><br>${r.modo_preparo}</p>
-      <p><b>Técnicas:</b> ${r.tecnicas}</p>
-      <p><b>Observações:</b> ${r.observacoes}</p>
+function render(dados){
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+  dados.forEach(item=>{
+    const card = document.createElement("div");
+    card.className="card";
+    card.innerHTML=`
+      <img src="${item.imagem}" onerror="this.src='https://picsum.photos/600/400?random=${Math.random()}'">
+      <h3>${item.nome}</h3>
     `;
-  }
+    card.onclick=()=>abrir(item);
+    grid.appendChild(card);
+  });
+}
 
-  function fecharModal() {
-    document.getElementById("modal").style.display = "none";
-  }
+function abrir(i){
+  document.getElementById("modal").style.display="block";
+  document.getElementById("detalhes").innerHTML=`
+    <img src="${i.imagem}" onerror="this.src='https://picsum.photos/600/400?random=${Math.random()}'">
+
+    <div class="section"><strong>Identificação</strong>${i.identificacao}</div>
+    <div class="section"><strong>Ingredientes</strong>${i.ingredientes}</div>
+    <div class="section"><strong>Tempo</strong>${i.tempo}</div>
+    <div class="section"><strong>Temperatura</strong>${i.temperatura}</div>
+    <div class="section"><strong>Modo de Preparo</strong>${i.modo_preparo}</div>
+    <div class="section"><strong>Técnicas Utilizadas</strong>${i.tecnicas}</div>
+    <div class="section"><strong>Rendimento</strong>${i.rendimento}</div>
+    <div class="section"><strong>Dificuldade</strong>${i.dificuldade}</div>
+    <div class="section"><strong>Categoria</strong>${i.categoria}</div>
+    <div class="section"><strong>Observações</strong>${i.observacoes}</div>
+  `;
+}
+
+function fechar(){
+  document.getElementById("modal").style.display="none";
+}
 </script>
 
 </body>
