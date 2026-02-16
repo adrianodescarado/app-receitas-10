@@ -3,22 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>365 Bolos Sem Glúten</title>
+<title>365 Bolos Premium</title>
 
 <style>
 body{
 font-family: Arial, sans-serif;
-background:#f5f5f5;
+background:#111;
+color:white;
 margin:0;
 }
 
+/* LOGIN */
 #login{
 display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
 height:100vh;
-background:#eeeeee;
+background:#1a1a1a;
 }
 
 #login h1{
@@ -45,6 +47,7 @@ border-radius:8px;
 cursor:pointer;
 }
 
+/* APP */
 #app{
 display:none;
 padding:20px;
@@ -54,36 +57,83 @@ h1{
 text-align:center;
 }
 
-.card{
-background:white;
-border-radius:20px;
-padding:20px;
-margin:20px 0;
-box-shadow:0 5px 20px rgba(0,0,0,0.1);
-text-align:center;
+/* MENU FIXO */
+#menuTopo{
+position:sticky;
+top:0;
+background:#111;
+padding:10px;
+z-index:1000;
+border-bottom:1px solid #333;
 }
 
-.emoji-capa{
-font-size:80px;
+#busca{
+width:100%;
+padding:8px;
+border-radius:8px;
+border:none;
+margin-bottom:10px;
+}
+
+.menuCategorias{
+display:flex;
+gap:10px;
+overflow-x:auto;
+}
+
+.menuCategorias button{
+background:#ff7a00;
+border:none;
+color:white;
+padding:6px 15px;
+border-radius:20px;
+cursor:pointer;
+white-space:nowrap;
+}
+
+/* SEÇÕES */
+.secao{
+margin-top:30px;
+}
+
+.secao h2{
+margin-bottom:10px;
+}
+
+/* CARROSSEL */
+.carrossel{
+display:flex;
+gap:15px;
+overflow-x:auto;
+}
+
+.card{
+min-width:200px;
+background:#222;
+border-radius:20px;
+padding:15px;
+box-shadow:0 5px 15px rgba(0,0,0,0.4);
 cursor:pointer;
 transition:0.3s;
 }
 
-.emoji-capa:hover{
-transform:scale(1.2);
+.card:hover{
+transform:scale(1.05);
+}
+
+.emoji-capa{
+font-size:50px;
+text-align:center;
 }
 
 .detalhes{
 display:none;
-margin-top:15px;
-text-align:left;
-}
-
-ul{
-padding-left:20px;
+margin-top:10px;
+font-size:14px;
 }
 </style>
 </head>
+
 <body>
 
 <!-- LOGIN -->
@@ -96,8 +146,16 @@ padding-left:20px;
 
 <!-- APP -->
 <div id="app">
-<h1>🍰 365 Bolos Sem Glúten, Sem Açúcar e Sem Leite</h1>
-<div id="receitas"></div>
+
+<div id="menuTopo">
+<input type="text" id="busca" placeholder="🔎 Buscar receita..." onkeyup="filtrarBusca()">
+<div class="menuCategorias" id="menuCategorias"></div>
+</div>
+
+<h1>🍰 365 Bolos Sem Açúcar, Sem Leite e Sem Glúten</h1>
+
+<div id="conteudo"></div>
+
 </div>
 
 <script>
@@ -112,24 +170,32 @@ alert("Senha incorreta");
 }
 }
 
-/* COLE AQUI SUA URL CSV PUBLICADA */
 const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSTF1_fDqiUJW1xlBwsMznwLbjZffyNVV0zuRJIEzIav_CsCj8nVuur1ap5iIl0UQyD1q5oOdG5JT3v/pub?gid=0&single=true&output=csv";
 
-function pegarEmoji(sabor){
+let receitas = [];
+let categorias = {};
 
+function identificarCategoria(sabor){
 sabor = sabor.toLowerCase();
 
-if(sabor.includes("chocolate")) return "🍫";
-if(sabor.includes("cenoura")) return "🥕";
-if(sabor.includes("laranja")) return "🍊";
-if(sabor.includes("limão")) return "🍋";
-if(sabor.includes("limao")) return "🍋";
-if(sabor.includes("coco")) return "🥥";
-if(sabor.includes("morango")) return "🍓";
-if(sabor.includes("banana")) return "🍌";
-if(sabor.includes("maçã")) return "🍎";
-if(sabor.includes("maca")) return "🍎";
+if(sabor.includes("chocolate")) return "🍫 Chocolate";
+if(sabor.includes("laranja")) return "🍊 Laranja";
+if(sabor.includes("coco")) return "🥥 Coco";
+if(sabor.includes("banana")) return "🍌 Banana";
+if(sabor.includes("cenoura")) return "🥕 Cenoura";
+if(sabor.includes("limão") || sabor.includes("limao")) return "🍋 Limão";
 
+return "🍰 Outros";
+}
+
+function pegarEmoji(sabor){
+sabor = sabor.toLowerCase();
+if(sabor.includes("chocolate")) return "🍫";
+if(sabor.includes("laranja")) return "🍊";
+if(sabor.includes("coco")) return "🥥";
+if(sabor.includes("banana")) return "🍌";
+if(sabor.includes("cenoura")) return "🥕";
+if(sabor.includes("limão") || sabor.includes("limao")) return "🍋";
 return "🍰";
 }
 
@@ -142,90 +208,138 @@ const linhas = data.split("\n").slice(1);
 linhas.forEach(linha => {
 
 const col = linha.split(",");
-
 if(col.length < 10) return;
 
-const nome = col[0];
-const sabor = col[1];
-const categoria = col[2];
-const tempo = col[3];
-const rendimento = col[4];
-const dificuldade = col[5];
-const calorias = col[6];
-const carbo = col[7];
-const prote = col[8];
-const gord = col[9];
-const fibras = col[10];
-const validade = col[11];
-const conservacao = col[12];
-const utensilios = col[13];
-const ingredientes = col[14];
-const preparo = col[15];
-const dicas = col[16];
-const substituicoes = col[17];
+const receita = {
+nome: col[0],
+sabor: col[1],
+categoria: identificarCategoria(col[1]),
+tempo: col[3],
+calorias: col[6],
+ingredientes: col[14],
+preparo: col[15]
+};
 
-const emoji = pegarEmoji(sabor);
+receitas.push(receita);
 
+if(!categorias[receita.categoria]){
+categorias[receita.categoria] = [];
+}
+categorias[receita.categoria].push(receita);
+
+});
+
+criarMenu();
+mostrarCategorias();
+
+});
+
+function criarMenu(){
+const menu = document.getElementById("menuCategorias");
+
+const btnTodos = document.createElement("button");
+btnTodos.innerText = "🔥 Todos ("+receitas.length+")";
+btnTodos.onclick = () => mostrarTodas();
+menu.appendChild(btnTodos);
+
+for(const cat in categorias){
+const btn = document.createElement("button");
+btn.innerText = cat+" ("+categorias[cat].length+")";
+btn.onclick = () => mostrarUmaCategoria(cat);
+menu.appendChild(btn);
+}
+}
+
+function criarCard(receita){
 const div = document.createElement("div");
-div.className = "card";
+div.className="card";
 
-div.innerHTML = `
-
-<div class="emoji-capa" onclick="toggle(this)">
-${emoji}
-</div>
-
-<h2>${nome}</h2>
-
+div.innerHTML=`
+<div class="emoji-capa">${pegarEmoji(receita.sabor)}</div>
+<h3>${receita.nome}</h3>
 <div class="detalhes">
-
-<p>📂 Categoria: ${categoria}</p>
-<p>⏱ Tempo: ${tempo}</p>
-<p>🍽 Rendimento: ${rendimento}</p>
-<p>⭐ Dificuldade: ${dificuldade}</p>
-
-<h3>🔥 Informações Nutricionais</h3>
-<p>Calorias: ${calorias}</p>
-<p>Carboidratos: ${carbo}</p>
-<p>Proteínas: ${prote}</p>
-<p>Gorduras: ${gord}</p>
-<p>Fibras: ${fibras}</p>
-
-<h3>🥣 Ingredientes</h3>
-<ul>
-${ingredientes.split(";").map(i => `<li>${i}</li>`).join("")}
-</ul>
-
-<h3>👩‍🍳 Modo de Preparo</h3>
-<ul>
-${preparo.split(";").map(p => `<li>${p}</li>`).join("")}
-</ul>
-
-<h3>🧊 Conservação</h3>
-<p>Validade: ${validade}</p>
-<p>${conservacao}</p>
-
-<h3>🍴 Utensílios</h3>
-<p>${utensilios}</p>
-
-<h3>💡 Dicas</h3>
-<p>${dicas}</p>
-
-<h3>🔄 Substituições</h3>
-<p>${substituicoes}</p>
-
+<p>⏱ ${receita.tempo}</p>
+<p>🔥 ${receita.calorias}</p>
 </div>
 `;
 
-document.getElementById("receitas").appendChild(div);
+div.onclick = function(){
+const det = div.querySelector(".detalhes");
+det.style.display = det.style.display==="block"?"none":"block";
+}
 
+return div;
+}
+
+function mostrarCategorias(){
+const container = document.getElementById("conteudo");
+container.innerHTML="";
+
+for(const cat in categorias){
+const secao = document.createElement("div");
+secao.className="secao";
+
+secao.innerHTML=`<h2>${cat}</h2>`;
+
+const carrossel = document.createElement("div");
+carrossel.className="carrossel";
+
+categorias[cat].forEach(r=>{
+carrossel.appendChild(criarCard(r));
 });
 
+secao.appendChild(carrossel);
+container.appendChild(secao);
+}
+}
+
+function mostrarUmaCategoria(cat){
+const container = document.getElementById("conteudo");
+container.innerHTML="";
+
+const secao = document.createElement("div");
+secao.className="secao";
+secao.innerHTML=`<h2>${cat}</h2>`;
+
+const carrossel = document.createElement("div");
+carrossel.className="carrossel";
+
+categorias[cat].forEach(r=>{
+carrossel.appendChild(criarCard(r));
 });
 
-function toggle(element){
-const detalhes = element.parentElement.querySelector(".detalhes");
-detalhes.style.display = detalhes.style.display === "block" ? "none" : "block";
+secao.appendChild(carrossel);
+container.appendChild(secao);
+}
+
+function mostrarTodas(){
+mostrarCategorias();
+}
+
+function filtrarBusca(){
+const termo = document.getElementById("busca").value.toLowerCase();
+
+const filtradas = receitas.filter(r =>
+r.nome.toLowerCase().includes(termo) ||
+r.sabor.toLowerCase().includes(termo)
+);
+
+const container = document.getElementById("conteudo");
+container.innerHTML="";
+
+const secao = document.createElement("div");
+secao.className="secao";
+secao.innerHTML=`<h2>🔎 Resultado da Busca</h2>`;
+
+const carrossel = document.createElement("div");
+carrossel.className="carrossel";
+
+filtradas.forEach(r=>{
+carrossel.appendChild(criarCard(r));
+});
+
+secao.appendChild(carrossel);
+container.appendChild(secao);
 }
 
 </script>
