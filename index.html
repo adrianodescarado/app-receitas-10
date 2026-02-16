@@ -6,21 +6,22 @@
 <title>365 Bolos Premium</title>
 
 <style>
+
+/* ===== GERAL ===== */
 body{
 font-family: Arial, sans-serif;
-background:#111;
-color:white;
 margin:0;
 }
 
-/* LOGIN */
+/* ===== LOGIN (FUNDO ESCURO) ===== */
 #login{
 display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
 height:100vh;
-background:#1a1a1a;
+background:#111;
+color:white;
 }
 
 #login h1{
@@ -47,35 +48,38 @@ border-radius:8px;
 cursor:pointer;
 }
 
-/* APP */
+/* ===== APP (FUNDO CLARO) ===== */
 #app{
 display:none;
 padding:20px;
+background:#f4f4f4;
+min-height:100vh;
+color:#111;
 }
 
 h1{
 text-align:center;
 }
 
-/* MENU FIXO */
+/* ===== MENU FIXO ===== */
 #menuTopo{
 position:sticky;
 top:0;
-background:#111;
+background:#ffffff;
 padding:10px;
 z-index:1000;
-border-bottom:1px solid #333;
+border-bottom:1px solid #ddd;
 }
 
 #busca{
 width:100%;
 padding:8px;
 border-radius:8px;
-border:none;
+border:1px solid #ccc;
 margin-bottom:10px;
 }
 
-/* MENU CATEGORIAS */
+/* ===== MENU CATEGORIAS ===== */
 .menuCategorias{
 display:flex;
 gap:10px;
@@ -92,34 +96,37 @@ cursor:pointer;
 white-space:nowrap;
 }
 
-/* SEÇÕES */
+/* ===== SEÇÕES ===== */
 .secao{
 margin-top:30px;
 }
 
 .secao h2{
 margin-bottom:10px;
+color:#111;
 }
 
-/* CARROSSEL */
+/* ===== CARROSSEL ===== */
 .carrossel{
 display:flex;
 gap:15px;
 overflow-x:auto;
 }
 
+/* ===== CARD ESCURO ===== */
 .card{
-min-width:250px;
+min-width:260px;
 background:#222;
 border-radius:20px;
 padding:15px;
-box-shadow:0 5px 15px rgba(0,0,0,0.4);
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
 cursor:pointer;
 transition:0.3s;
+color:white;
 }
 
 .card:hover{
-transform:scale(1.05);
+transform:scale(1.03);
 }
 
 .emoji-capa{
@@ -127,15 +134,30 @@ font-size:50px;
 text-align:center;
 }
 
+.card h3{
+color:white;
+}
+
+/* ===== DETALHES FUNDO BRANCO ===== */
 .detalhes{
 display:none;
-margin-top:10px;
+margin-top:15px;
+background:white;
+color:#111;
+padding:15px;
+border-radius:15px;
 font-size:14px;
+}
+
+.detalhes h4{
+color:#111;
+margin-top:10px;
 }
 
 ul{
 padding-left:18px;
 }
+
 </style>
 </head>
 
