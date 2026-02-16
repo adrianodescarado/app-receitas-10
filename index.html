@@ -75,6 +75,7 @@ border:none;
 margin-bottom:10px;
 }
 
+/* MENU CATEGORIAS */
 .menuCategorias{
 display:flex;
 gap:10px;
@@ -108,7 +109,7 @@ overflow-x:auto;
 }
 
 .card{
-min-width:200px;
+min-width:250px;
 background:#222;
 border-radius:20px;
 padding:15px;
@@ -130,6 +131,10 @@ text-align:center;
 display:none;
 margin-top:10px;
 font-size:14px;
+}
+
+ul{
+padding-left:18px;
 }
 </style>
 </head>
@@ -215,9 +220,20 @@ nome: col[0],
 sabor: col[1],
 categoria: identificarCategoria(col[1]),
 tempo: col[3],
+rendimento: col[4],
+dificuldade: col[5],
 calorias: col[6],
+carbo: col[7],
+prote: col[8],
+gord: col[9],
+fibras: col[10],
+validade: col[11],
+conservacao: col[12],
+utensilios: col[13],
 ingredientes: col[14],
-preparo: col[15]
+preparo: col[15],
+dicas: col[16],
+substituicoes: col[17]
 };
 
 receitas.push(receita);
@@ -239,7 +255,7 @@ const menu = document.getElementById("menuCategorias");
 
 const btnTodos = document.createElement("button");
 btnTodos.innerText = "🔥 Todos ("+receitas.length+")";
-btnTodos.onclick = () => mostrarTodas();
+btnTodos.onclick = () => mostrarCategorias();
 menu.appendChild(btnTodos);
 
 for(const cat in categorias){
@@ -257,9 +273,37 @@ div.className="card";
 div.innerHTML=`
 <div class="emoji-capa">${pegarEmoji(receita.sabor)}</div>
 <h3>${receita.nome}</h3>
+
 <div class="detalhes">
+
 <p>⏱ ${receita.tempo}</p>
 <p>🔥 ${receita.calorias}</p>
+<p>🍽 ${receita.rendimento}</p>
+<p>⭐ ${receita.dificuldade}</p>
+
+<h4>🥣 Ingredientes</h4>
+<ul>
+${receita.ingredientes.split(";").map(i=>`<li>${i}</li>`).join("")}
+</ul>
+
+<h4>👩‍🍳 Modo de Preparo</h4>
+<ul>
+${receita.preparo.split(";").map(p=>`<li>${p}</li>`).join("")}
+</ul>
+
+<h4>🧊 Conservação</h4>
+<p>${receita.validade}</p>
+<p>${receita.conservacao}</p>
+
+<h4>🍴 Utensílios</h4>
+<p>${receita.utensilios}</p>
+
+<h4>💡 Dicas</h4>
+<p>${receita.dicas}</p>
+
+<h4>🔄 Substituições</h4>
+<p>${receita.substituicoes}</p>
+
 </div>
 `;
 
@@ -278,7 +322,6 @@ container.innerHTML="";
 for(const cat in categorias){
 const secao = document.createElement("div");
 secao.className="secao";
-
 secao.innerHTML=`<h2>${cat}</h2>`;
 
 const carrossel = document.createElement("div");
@@ -310,10 +353,6 @@ carrossel.appendChild(criarCard(r));
 
 secao.appendChild(carrossel);
 container.appendChild(secao);
-}
-
-function mostrarTodas(){
-mostrarCategorias();
 }
 
 function filtrarBusca(){
