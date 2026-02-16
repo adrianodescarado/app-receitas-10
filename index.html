@@ -202,12 +202,24 @@ const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSTF1_fDqiUJW1xlBws
 let receitas = [];
 let categorias = {};
 
-/* ===== ALTERAÇÃO FEITA AQUI ===== */
+/* ===== CORREÇÃO AQUI ===== */
+/* Agrupa sabores semelhantes e REMOVE "Outros" */
 function identificarCategoria(sabor){
-if(!sabor) return "Sem Categoria";
-return pegarEmoji(sabor) + " " + sabor;
+if(!sabor) return null;
+
+sabor = sabor.toLowerCase();
+
+if(sabor.includes("chocolate")) return "🍫 Chocolate";
+if(sabor.includes("laranja")) return "🍊 Laranja";
+if(sabor.includes("coco")) return "🥥 Coco";
+if(sabor.includes("banana")) return "🍌 Banana";
+if(sabor.includes("cenoura")) return "🥕 Cenoura";
+if(sabor.includes("limão") || sabor.includes("limao")) return "🍋 Limão";
+
+/* Se não entrar em nenhuma acima, usa o próprio sabor */
+return "🍰 " + sabor.charAt(0).toUpperCase() + sabor.slice(1);
 }
-/* ================================= */
+/* ========================== */
 
 function pegarEmoji(sabor){
 sabor = sabor.toLowerCase();
@@ -231,10 +243,13 @@ linhas.forEach(linha => {
 const col = linha.split(",");
 if(col.length < 10) return;
 
+const categoriaFinal = identificarCategoria(col[1]);
+if(!categoriaFinal) return;
+
 const receita = {
 nome: col[0],
 sabor: col[1],
-categoria: identificarCategoria(col[1]),
+categoria: categoriaFinal,
 tempo: col[3],
 rendimento: col[4],
 dificuldade: col[5],
