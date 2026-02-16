@@ -202,18 +202,12 @@ const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSTF1_fDqiUJW1xlBws
 let receitas = [];
 let categorias = {};
 
+/* ===== ALTERAÇÃO FEITA AQUI ===== */
 function identificarCategoria(sabor){
-sabor = sabor.toLowerCase();
-
-if(sabor.includes("chocolate")) return "🍫 Chocolate";
-if(sabor.includes("laranja")) return "🍊 Laranja";
-if(sabor.includes("coco")) return "🥥 Coco";
-if(sabor.includes("banana")) return "🍌 Banana";
-if(sabor.includes("cenoura")) return "🥕 Cenoura";
-if(sabor.includes("limão") || sabor.includes("limao")) return "🍋 Limão";
-
-return "🍰 Outros";
+if(!sabor) return "Sem Categoria";
+return pegarEmoji(sabor) + " " + sabor;
 }
+/* ================================= */
 
 function pegarEmoji(sabor){
 sabor = sabor.toLowerCase();
