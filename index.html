@@ -6,35 +6,158 @@
 <title>365 Bolos Premium</title>
 
 <style>
-body{font-family: Arial, sans-serif;margin:0;}
-#login{display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;background:#111;color:white;}
-#login h1{font-size:28px;}
-#login .bolo-grande{font-size:100px;margin-bottom:20px;}
-#login input{padding:10px;font-size:16px;margin:10px 0;}
-#login button{padding:10px 20px;background:#ff7a00;color:white;border:none;border-radius:8px;cursor:pointer;}
 
-#app{display:none;padding:20px;background:#f4f4f4;min-height:100vh;color:#111;}
-h1{text-align:center;}
+/* ===== GERAL ===== */
+body{
+font-family: Arial, sans-serif;
+margin:0;
+}
 
-#menuTopo{position:sticky;top:0;background:#ffffff;padding:10px;z-index:1000;border-bottom:1px solid #ddd;}
-#busca{width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;margin-bottom:10px;}
+/* ===== LOGIN (FUNDO ESCURO) ===== */
+#login{
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+height:100vh;
+background:#111;
+color:white;
+}
 
-.menuCategorias{display:flex;gap:10px;overflow-x:auto;}
-.menuCategorias button{background:#ff7a00;border:none;color:white;padding:6px 15px;border-radius:20px;cursor:pointer;white-space:nowrap;}
+#login h1{
+font-size:28px;
+}
 
-.secao{margin-top:30px;}
-.secao h2{margin-bottom:10px;color:#111;}
+#login .bolo-grande{
+font-size:100px;
+margin-bottom:20px;
+}
 
-.carrossel{display:flex;gap:15px;overflow-x:auto;}
+#login input{
+padding:10px;
+font-size:16px;
+margin:10px 0;
+}
 
-.card{min-width:260px;background:#222;border-radius:20px;padding:15px;box-shadow:0 5px 15px rgba(0,0,0,0.2);cursor:pointer;transition:0.3s;color:white;}
-.card:hover{transform:scale(1.03);}
-.emoji-capa{font-size:50px;text-align:center;}
-.card h3{color:white;}
+#login button{
+padding:10px 20px;
+background:#ff7a00;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
 
-.detalhes{display:none;margin-top:15px;background:white;color:#111;padding:15px;border-radius:15px;font-size:14px;}
-.detalhes h4{color:#111;margin-top:10px;}
-ul{padding-left:18px;}
+/* ===== APP (FUNDO CLARO) ===== */
+#app{
+display:none;
+padding:20px;
+background:#f4f4f4;
+min-height:100vh;
+color:#111;
+}
+
+h1{
+text-align:center;
+}
+
+/* ===== MENU FIXO ===== */
+#menuTopo{
+position:sticky;
+top:0;
+background:#ffffff;
+padding:10px;
+z-index:1000;
+border-bottom:1px solid #ddd;
+}
+
+#busca{
+width:100%;
+padding:8px;
+border-radius:8px;
+border:1px solid #ccc;
+margin-bottom:10px;
+}
+
+/* ===== MENU CATEGORIAS ===== */
+.menuCategorias{
+display:flex;
+gap:10px;
+overflow-x:auto;
+}
+
+.menuCategorias button{
+background:#ff7a00;
+border:none;
+color:white;
+padding:6px 15px;
+border-radius:20px;
+cursor:pointer;
+white-space:nowrap;
+}
+
+/* ===== SEÇÕES ===== */
+.secao{
+margin-top:30px;
+}
+
+.secao h2{
+margin-bottom:10px;
+color:#111;
+}
+
+/* ===== CARROSSEL ===== */
+.carrossel{
+display:flex;
+gap:15px;
+overflow-x:auto;
+}
+
+/* ===== CARD ESCURO ===== */
+.card{
+min-width:260px;
+background:#222;
+border-radius:20px;
+padding:15px;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+cursor:pointer;
+transition:0.3s;
+color:white;
+}
+
+.card:hover{
+transform:scale(1.03);
+}
+
+.emoji-capa{
+font-size:50px;
+text-align:center;
+}
+
+.card h3{
+color:white;
+}
+
+/* ===== DETALHES FUNDO BRANCO ===== */
+.detalhes{
+display:none;
+margin-top:15px;
+background:white;
+color:#111;
+padding:15px;
+border-radius:15px;
+font-size:14px;
+}
+
+.detalhes h4{
+color:#111;
+margin-top:10px;
+}
+
+ul{
+padding-left:18px;
+}
+
 </style>
 </head>
 
@@ -77,9 +200,20 @@ const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSTF1_fDqiUJW1xlBws
 let receitas = [];
 let categorias = {};
 
-function identificarCategoria(sabor){
-if(!sabor) return "🍰 Geral";
-return "🍰 " + sabor.trim();
+function extrairIngredientePrincipal(sabor){
+sabor = sabor.toLowerCase();
+
+const palavras = sabor.split(" ");
+
+const ignorar = ["com","de","sem","bolo","e"];
+
+for(let palavra of palavras){
+if(!ignorar.includes(palavra) && palavra.length > 2){
+return palavra.charAt(0).toUpperCase() + palavra.slice(1);
+}
+}
+
+return palavras[0];
 }
 
 function pegarEmoji(sabor){
@@ -90,9 +224,7 @@ if(sabor.includes("coco")) return "🥥";
 if(sabor.includes("banana")) return "🍌";
 if(sabor.includes("cenoura")) return "🥕";
 if(sabor.includes("limão") || sabor.includes("limao")) return "🍋";
-if(sabor.includes("abóbora") || sabor.includes("abobora")) return "🎃";
-if(sabor.includes("maçã") || sabor.includes("maca")) return "🍎";
-return "🍰";
+return "🎂";
 }
 
 fetch(url)
@@ -109,7 +241,7 @@ if(col.length < 10) return;
 const receita = {
 nome: col[0],
 sabor: col[1],
-categoria: identificarCategoria(col[1]),
+categoria: extrairIngredientePrincipal(col[1]),
 tempo: col[3],
 rendimento: col[4],
 dificuldade: col[5],
@@ -136,7 +268,6 @@ categorias[receita.categoria].push(receita);
 
 });
 
-/* ORDENAR CATEGORIAS DECRESCENTE */
 categorias = Object.fromEntries(
 Object.entries(categorias)
 .sort((a,b)=> b[1].length - a[1].length)
@@ -171,17 +302,23 @@ div.className="card";
 div.innerHTML=`
 <div class="emoji-capa">${pegarEmoji(receita.sabor)}</div>
 <h3>${receita.nome}</h3>
+
 <div class="detalhes">
+
 <p>⏱ ${receita.tempo}</p>
 <p>🔥 ${receita.calorias}</p>
 <p>🍽 ${receita.rendimento}</p>
 <p>⭐ ${receita.dificuldade}</p>
 
 <h4>🥣 Ingredientes</h4>
-<ul>${receita.ingredientes.split(";").map(i=>`<li>${i}</li>`).join("")}</ul>
+<ul>
+${receita.ingredientes.split(";").map(i=>`<li>${i}</li>`).join("")}
+</ul>
 
 <h4>👩‍🍳 Modo de Preparo</h4>
-<ul>${receita.preparo.split(";").map(p=>`<li>${p}</li>`).join("")}</ul>
+<ul>
+${receita.preparo.split(";").map(p=>`<li>${p}</li>`).join("")}
+</ul>
 
 <h4>🧊 Conservação</h4>
 <p>${receita.validade}</p>
@@ -195,6 +332,7 @@ div.innerHTML=`
 
 <h4>🔄 Substituições</h4>
 <p>${receita.substituicoes}</p>
+
 </div>
 `;
 
