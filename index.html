@@ -3,301 +3,201 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>365 Bolos Premium</title>
+<title>365 Bolos Funcionais</title>
 
 <style>
-
-/* ===== GERAL ===== */
 body{
-font-family: Arial, sans-serif;
 margin:0;
+font-family:Arial, sans-serif;
+background:#f5f5f5;
 }
 
-/* ===== LOGIN (FUNDO ESCURO) ===== */
+/* TELA SENHA */
 #login{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#111;
 display:flex;
-flex-direction:column;
 justify-content:center;
 align-items:center;
-height:100vh;
-background:#111;
+flex-direction:column;
 color:white;
-}
-
-#login h1{
-font-size:28px;
-}
-
-#login .bolo-grande{
-font-size:100px;
-margin-bottom:20px;
 }
 
 #login input{
 padding:10px;
-font-size:16px;
-margin:10px 0;
-}
-
-#login button{
-padding:10px 20px;
-background:#ff7a00;
-color:white;
-border:none;
 border-radius:8px;
-cursor:pointer;
-}
-
-/* ===== APP (FUNDO CLARO) ===== */
-#app{
-display:none;
-padding:20px;
-background:#f4f4f4;
-min-height:100vh;
-color:#111;
-}
-
-h1{
-text-align:center;
-}
-
-/* ===== MENU FIXO ===== */
-#menuTopo{
-position:sticky;
-top:0;
-background:#ffffff;
-padding:10px;
-z-index:1000;
-border-bottom:1px solid #ddd;
-}
-
-#busca{
-width:100%;
-padding:8px;
-border-radius:8px;
-border:1px solid #ccc;
-margin-bottom:10px;
-}
-
-/* ===== MENU CATEGORIAS ===== */
-.menuCategorias{
-display:flex;
-gap:10px;
-overflow-x:auto;
-}
-
-.menuCategorias button{
-background:#ff7a00;
 border:none;
-color:white;
-padding:6px 15px;
-border-radius:20px;
-cursor:pointer;
-white-space:nowrap;
-}
-
-/* ===== SEÇÕES ===== */
-.secao{
-margin-top:30px;
-}
-
-.secao h2{
-margin-bottom:10px;
-color:#111;
-}
-
-/* ===== CARROSSEL ===== */
-.carrossel{
-display:flex;
-gap:15px;
-overflow-x:auto;
-}
-
-/* ===== CARD ESCURO ===== */
-.card{
-min-width:260px;
-background:#222;
-border-radius:20px;
-padding:15px;
-box-shadow:0 5px 15px rgba(0,0,0,0.2);
-cursor:pointer;
-transition:0.3s;
-color:white;
-}
-
-.card:hover{
-transform:scale(1.03);
-}
-
-.emoji-capa{
-font-size:50px;
-text-align:center;
-}
-
-.card h3{
-color:white;
-}
-
-/* ===== DETALHES FUNDO BRANCO ===== */
-.detalhes{
-display:none;
-margin-top:15px;
-background:white;
-color:#111;
-padding:15px;
-border-radius:15px;
-font-size:14px;
-}
-
-.detalhes h4{
-color:#111;
 margin-top:10px;
 }
 
-ul{
-padding-left:18px;
+#login button{
+margin-top:10px;
+padding:10px 20px;
+border:none;
+border-radius:8px;
+background:#ff9800;
+color:white;
+font-weight:bold;
+cursor:pointer;
 }
 
+/* MENU TOPO */
+#menu{
+position:fixed;
+top:0;
+width:100%;
+background:#222;
+overflow-x:auto;
+white-space:nowrap;
+padding:10px 0;
+z-index:999;
+}
+
+#menu button{
+background:none;
+border:none;
+color:white;
+padding:10px 15px;
+cursor:pointer;
+font-weight:bold;
+}
+
+#menu button:hover{
+color:#ff9800;
+}
+
+/* CONTEÚDO */
+#conteudo{
+margin-top:70px;
+padding:15px;
+}
+
+/* CARDS */
+.card{
+background:#1c1c1c;
+color:white;
+border-radius:12px;
+margin-bottom:15px;
+padding:15px;
+cursor:pointer;
+}
+
+.card h3{
+margin:0;
+}
+
+.receita{
+display:none;
+background:white;
+color:#333;
+margin-top:10px;
+padding:10px;
+border-radius:10px;
+}
+
+.receita p{
+margin:5px 0;
+}
 </style>
 </head>
-
 <body>
 
-<!-- LOGIN -->
 <div id="login">
-<div class="bolo-grande">🎂</div>
-<h1>App-365 Bolos</h1>
+<h2>🔐 Acesso Exclusivo</h2>
 <input type="password" id="senha" placeholder="Digite a senha">
 <button onclick="entrar()">Entrar</button>
 </div>
 
-<!-- APP -->
-<div id="app">
-
-<div id="menuTopo">
-<input type="text" id="busca" placeholder="🔎 Buscar receita..." onkeyup="filtrarBusca()">
-<div class="menuCategorias" id="menuCategorias"></div>
+<div id="menu" style="display:none;">
+<button onclick="filtrar('Todos')">Todos</button>
+<button onclick="filtrar('Chocolate')">🍫 Chocolate</button>
+<button onclick="filtrar('Laranja')">🍊 Laranja</button>
+<button onclick="filtrar('Limão')">🍋 Limão</button>
+<button onclick="filtrar('Coco')">🥥 Coco</button>
+<button onclick="filtrar('Banana')">🍌 Banana</button>
+<button onclick="filtrar('Maçã')">🍎 Maçã</button>
+<button onclick="filtrar('Frutas Vermelhas')">🍓 Frutas Vermelhas</button>
+<button onclick="filtrar('Abóbora')">🎃 Abóbora</button>
+<button onclick="filtrar('Café')">☕ Café</button>
+<button onclick="filtrar('Pistache')">🥜 Pistache</button>
+<button onclick="filtrar('Especial')">✨ Especial</button>
 </div>
-
-<h1>🍰 365 Bolos Sem Açúcar, Sem Leite e Sem Glúten</h1>
 
 <div id="conteudo"></div>
 
-</div>
-
 <script>
+
+const SENHA_CORRETA = "1234";
 
 function entrar(){
 const senha = document.getElementById("senha").value;
-if(senha === "1950*"){
+if(senha === SENHA_CORRETA){
 document.getElementById("login").style.display="none";
-document.getElementById("app").style.display="block";
-}else{
+document.getElementById("menu").style.display="block";
+carregarReceitas();
+}
+else{
 alert("Senha incorreta");
 }
 }
 
-const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSTF1_fDqiUJW1xlBwsMznwLbjZffyNVV0zuRJIEzIav_CsCj8nVuur1ap5iIl0UQyD1q5oOdG5JT3v/pub?gid=0&single=true&output=csv";
+function carregarReceitas(){
+const conteudo = document.getElementById("conteudo");
+conteudo.innerHTML="";
 
-let receitas = [];
-let categorias = {};
-
-function identificarCategoria(sabor){
-sabor = sabor.toLowerCase();
-
-if(sabor.includes("chocolate")) return "🍫 Chocolate";
-if(sabor.includes("laranja")) return "🍊 Laranja";
-if(sabor.includes("coco")) return "🥥 Coco";
-if(sabor.includes("banana")) return "🍌 Banana";
-if(sabor.includes("cenoura")) return "🥕 Cenoura";
-if(sabor.includes("limão") || sabor.includes("limao")) return "🍋 Limão";
-if(sabor.includes("maçã") || sabor.includes("maca")) return "🍎 Maçã";
-if(sabor.includes("abóbora") || sabor.includes("abobora")) return "🎃 Abóbora";
-if(sabor.includes("morango")) return "🍓 Morango";
-if(sabor.includes("frutas vermelhas")) return "🍓 Frutas Vermelhas";
-if(sabor.includes("café") || sabor.includes("cafe")) return "☕ Café";
-if(sabor.includes("pistache")) return "🥜 Pistache";
-if(sabor.includes("amêndoa") || sabor.includes("amendoa")) return "🌰 Amêndoas";
-if(sabor.includes("castanha")) return "🌰 Castanhas";
-if(sabor.includes("maracujá") || sabor.includes("maracuja")) return "🥭 Maracujá";
-if(sabor.includes("abacaxi")) return "🍍 Abacaxi";
-if(sabor.includes("ameixa")) return "🍑 Ameixa";
-
-return null; // REMOVIDO "Outros"
+/* EXEMPLO DE RECEITAS */
+const receitas = [
+{
+nome:"Bolo de Chocolate com Abóbora",
+categoria:"Chocolate",
+ingredientes:"Ovos; farinha de amêndoas; cacau 100%; purê de abóbora; eritritol; óleo de coco; fermento",
+modo:"Misture secos; Adicione líquidos; Incorpore abóbora; Asse 40 min",
+calorias:"210 kcal"
+},
+{
+nome:"Bolo de Laranja com Ameixa",
+categoria:"Laranja",
+ingredientes:"Ovos; farinha de arroz; suco de laranja; ameixa; xilitol; óleo de coco; fermento",
+modo:"Misture; Asse 35 min",
+calorias:"190 kcal"
 }
+];
 
-function pegarEmoji(sabor){
-sabor = sabor.toLowerCase();
-
-if(sabor.includes("chocolate")) return "🍫";
-if(sabor.includes("laranja")) return "🍊";
-if(sabor.includes("coco")) return "🥥";
-if(sabor.includes("banana")) return "🍌";
-if(sabor.includes("cenoura")) return "🥕";
-if(sabor.includes("limão") || sabor.includes("limao")) return "🍋";
-if(sabor.includes("maçã") || sabor.includes("maca")) return "🍎";
-if(sabor.includes("abóbora") || sabor.includes("abobora")) return "🎃";
-if(sabor.includes("morango")) return "🍓";
-if(sabor.includes("frutas vermelhas")) return "🍓";
-if(sabor.includes("café") || sabor.includes("cafe")) return "☕";
-if(sabor.includes("pistache")) return "🥜";
-if(sabor.includes("amêndoa") || sabor.includes("amendoa")) return "🌰";
-if(sabor.includes("castanha")) return "🌰";
-if(sabor.includes("maracujá") || sabor.includes("maracuja")) return "🥭";
-if(sabor.includes("abacaxi")) return "🍍";
-if(sabor.includes("ameixa")) return "🍑";
-
-return "🍰";
-}
-
-fetch(url)
-.then(res => res.text())
-.then(data => {
-
-const linhas = data.split("\n").slice(1);
-
-linhas.forEach(linha => {
-
-const col = linha.split(",");
-if(col.length < 10) return;
-
-const categoria = identificarCategoria(col[1]);
-if(!categoria) return; // ignora se não tiver categoria
-
-const receita = {
-nome: col[0],
-sabor: col[1],
-categoria: categoria,
-tempo: col[3],
-rendimento: col[4],
-dificuldade: col[5],
-calorias: col[6],
-carbo: col[7],
-prote: col[8],
-gord: col[9],
-fibras: col[10],
-validade: col[11],
-conservacao: col[12],
-utensilios: col[13],
-ingredientes: col[14],
-preparo: col[15],
-dicas: col[16],
-substituicoes: col[17]
-};
-
-receitas.push(receita);
-
-if(!categorias[receita.categoria]){
-categorias[receita.categoria] = [];
-}
-categorias[receita.categoria].push(receita);
-
+receitas.forEach((r,i)=>{
+conteudo.innerHTML += `
+<div class="card" data-categoria="${r.categoria}">
+<h3 onclick="toggle(${i})">${r.nome} 🍰</h3>
+<div class="receita" id="receita${i}">
+<p><strong>Ingredientes:</strong> ${r.ingredientes.replaceAll(";", "<br>")}</p>
+<p><strong>Modo:</strong> ${r.modo.replaceAll(";", "<br>")}</p>
+<p><strong>Calorias:</strong> ${r.calorias}</p>
+</div>
+</div>
+`;
 });
+}
 
-criarMenu();
-mostrarCategorias();
+function toggle(i){
+const receita = document.getElementById("receita"+i);
+receita.style.display = receita.style.display === "block" ? "none" : "block";
+}
 
+function filtrar(cat){
+const cards = document.querySelectorAll(".card");
+cards.forEach(card=>{
+if(cat === "Todos" || card.dataset.categoria === cat){
+card.style.display="block";
+}
+else{
+card.style.display="none";
+}
 });
+}
+
 </script>
 
 </body>
