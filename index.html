@@ -1,3 +1,5 @@
+backup receita 10 
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -6,12 +8,14 @@
 <title>365 Bolos Premium</title>
 
 <style>
+
+/* ===== GERAL ===== */
 body{
 font-family: Arial, sans-serif;
 margin:0;
 }
 
-/* LOGIN */
+/* ===== LOGIN (FUNDO ESCURO) ===== */
 #login{
 display:flex;
 flex-direction:column;
@@ -46,7 +50,7 @@ border-radius:8px;
 cursor:pointer;
 }
 
-/* APP */
+/* ===== APP (FUNDO CLARO) ===== */
 #app{
 display:none;
 padding:20px;
@@ -59,7 +63,7 @@ h1{
 text-align:center;
 }
 
-/* MENU */
+/* ===== MENU FIXO ===== */
 #menuTopo{
 position:sticky;
 top:0;
@@ -77,6 +81,7 @@ border:1px solid #ccc;
 margin-bottom:10px;
 }
 
+/* ===== MENU CATEGORIAS ===== */
 .menuCategorias{
 display:flex;
 gap:10px;
@@ -93,7 +98,7 @@ cursor:pointer;
 white-space:nowrap;
 }
 
-/* SEÇÕES */
+/* ===== SEÇÕES ===== */
 .secao{
 margin-top:30px;
 }
@@ -103,13 +108,14 @@ margin-bottom:10px;
 color:#111;
 }
 
+/* ===== CARROSSEL ===== */
 .carrossel{
 display:flex;
 gap:15px;
 overflow-x:auto;
 }
 
-/* CARD */
+/* ===== CARD ESCURO ===== */
 .card{
 min-width:260px;
 background:#222;
@@ -134,7 +140,7 @@ text-align:center;
 color:white;
 }
 
-/* DETALHES */
+/* ===== DETALHES FUNDO BRANCO ===== */
 .detalhes{
 display:none;
 margin-top:15px;
@@ -145,14 +151,21 @@ border-radius:15px;
 font-size:14px;
 }
 
+.detalhes h4{
+color:#111;
+margin-top:10px;
+}
+
 ul{
 padding-left:18px;
 }
+
 </style>
 </head>
 
 <body>
 
+<!-- LOGIN -->
 <div id="login">
 <div class="bolo-grande">🎂</div>
 <h1>App-365 Bolos</h1>
@@ -160,6 +173,7 @@ padding-left:18px;
 <button onclick="entrar()">Entrar</button>
 </div>
 
+<!-- APP -->
 <div id="app">
 
 <div id="menuTopo">
@@ -199,42 +213,18 @@ if(sabor.includes("coco")) return "🥥 Coco";
 if(sabor.includes("banana")) return "🍌 Banana";
 if(sabor.includes("cenoura")) return "🥕 Cenoura";
 if(sabor.includes("limão") || sabor.includes("limao")) return "🍋 Limão";
-if(sabor.includes("maçã") || sabor.includes("maca")) return "🍎 Maçã";
-if(sabor.includes("abóbora") || sabor.includes("abobora")) return "🎃 Abóbora";
-if(sabor.includes("morango")) return "🍓 Morango";
-if(sabor.includes("frutas vermelhas")) return "🍓 Frutas Vermelhas";
-if(sabor.includes("café") || sabor.includes("cafe")) return "☕ Café";
-if(sabor.includes("pistache")) return "🥜 Pistache";
-if(sabor.includes("amêndoa") || sabor.includes("amendoa")) return "🌰 Amêndoas";
-if(sabor.includes("castanha")) return "🌰 Castanhas";
-if(sabor.includes("maracujá") || sabor.includes("maracuja")) return "🥭 Maracujá";
-if(sabor.includes("abacaxi")) return "🍍 Abacaxi";
-if(sabor.includes("ameixa")) return "🍑 Ameixa";
 
-return null; // remove "Outros"
+return "🍰 Outros";
 }
 
 function pegarEmoji(sabor){
 sabor = sabor.toLowerCase();
-
 if(sabor.includes("chocolate")) return "🍫";
 if(sabor.includes("laranja")) return "🍊";
 if(sabor.includes("coco")) return "🥥";
 if(sabor.includes("banana")) return "🍌";
 if(sabor.includes("cenoura")) return "🥕";
 if(sabor.includes("limão") || sabor.includes("limao")) return "🍋";
-if(sabor.includes("maçã") || sabor.includes("maca")) return "🍎";
-if(sabor.includes("abóbora") || sabor.includes("abobora")) return "🎃";
-if(sabor.includes("morango")) return "🍓";
-if(sabor.includes("frutas vermelhas")) return "🍓";
-if(sabor.includes("café") || sabor.includes("cafe")) return "☕";
-if(sabor.includes("pistache")) return "🥜";
-if(sabor.includes("amêndoa") || sabor.includes("amendoa")) return "🌰";
-if(sabor.includes("castanha")) return "🌰";
-if(sabor.includes("maracujá") || sabor.includes("maracuja")) return "🥭";
-if(sabor.includes("abacaxi")) return "🍍";
-if(sabor.includes("ameixa")) return "🍑";
-
 return "🍰";
 }
 
@@ -249,13 +239,10 @@ linhas.forEach(linha => {
 const col = linha.split(",");
 if(col.length < 10) return;
 
-const categoria = identificarCategoria(col[1]);
-if(!categoria) return;
-
 const receita = {
 nome: col[0],
 sabor: col[1],
-categoria: categoria,
+categoria: identificarCategoria(col[1]),
 tempo: col[3],
 rendimento: col[4],
 dificuldade: col[5],
@@ -286,6 +273,137 @@ criarMenu();
 mostrarCategorias();
 
 });
+
+function criarMenu(){
+const menu = document.getElementById("menuCategorias");
+
+const btnTodos = document.createElement("button");
+btnTodos.innerText = "🔥 Todos ("+receitas.length+")";
+btnTodos.onclick = () => mostrarCategorias();
+menu.appendChild(btnTodos);
+
+for(const cat in categorias){
+const btn = document.createElement("button");
+btn.innerText = cat+" ("+categorias[cat].length+")";
+btn.onclick = () => mostrarUmaCategoria(cat);
+menu.appendChild(btn);
+}
+}
+
+function criarCard(receita){
+const div = document.createElement("div");
+div.className="card";
+
+div.innerHTML=`
+<div class="emoji-capa">${pegarEmoji(receita.sabor)}</div>
+<h3>${receita.nome}</h3>
+
+<div class="detalhes">
+
+<p>⏱ ${receita.tempo}</p>
+<p>🔥 ${receita.calorias}</p>
+<p>🍽 ${receita.rendimento}</p>
+<p>⭐ ${receita.dificuldade}</p>
+
+<h4>🥣 Ingredientes</h4>
+<ul>
+${receita.ingredientes.split(";").map(i=>`<li>${i}</li>`).join("")}
+</ul>
+
+<h4>👩‍🍳 Modo de Preparo</h4>
+<ul>
+${receita.preparo.split(";").map(p=>`<li>${p}</li>`).join("")}
+</ul>
+
+<h4>🧊 Conservação</h4>
+<p>${receita.validade}</p>
+<p>${receita.conservacao}</p>
+
+<h4>🍴 Utensílios</h4>
+<p>${receita.utensilios}</p>
+
+<h4>💡 Dicas</h4>
+<p>${receita.dicas}</p>
+
+<h4>🔄 Substituições</h4>
+<p>${receita.substituicoes}</p>
+
+</div>
+`;
+
+div.onclick = function(){
+const det = div.querySelector(".detalhes");
+det.style.display = det.style.display==="block"?"none":"block";
+}
+
+return div;
+}
+
+function mostrarCategorias(){
+const container = document.getElementById("conteudo");
+container.innerHTML="";
+
+for(const cat in categorias){
+const secao = document.createElement("div");
+secao.className="secao";
+secao.innerHTML=`<h2>${cat}</h2>`;
+
+const carrossel = document.createElement("div");
+carrossel.className="carrossel";
+
+categorias[cat].forEach(r=>{
+carrossel.appendChild(criarCard(r));
+});
+
+secao.appendChild(carrossel);
+container.appendChild(secao);
+}
+}
+
+function mostrarUmaCategoria(cat){
+const container = document.getElementById("conteudo");
+container.innerHTML="";
+
+const secao = document.createElement("div");
+secao.className="secao";
+secao.innerHTML=`<h2>${cat}</h2>`;
+
+const carrossel = document.createElement("div");
+carrossel.className="carrossel";
+
+categorias[cat].forEach(r=>{
+carrossel.appendChild(criarCard(r));
+});
+
+secao.appendChild(carrossel);
+container.appendChild(secao);
+}
+
+function filtrarBusca(){
+const termo = document.getElementById("busca").value.toLowerCase();
+
+const filtradas = receitas.filter(r =>
+r.nome.toLowerCase().includes(termo) ||
+r.sabor.toLowerCase().includes(termo)
+);
+
+const container = document.getElementById("conteudo");
+container.innerHTML="";
+
+const secao = document.createElement("div");
+secao.className="secao";
+secao.innerHTML=`<h2>🔎 Resultado da Busca</h2>`;
+
+const carrossel = document.createElement("div");
+carrossel.className="carrossel";
+
+filtradas.forEach(r=>{
+carrossel.appendChild(criarCard(r));
+});
+
+secao.appendChild(carrossel);
+container.appendChild(secao);
+}
 
 </script>
 
