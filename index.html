@@ -106,14 +106,14 @@ margin-bottom:10px;
 color:#111;
 }
 
-/* ===== CARROSSEL ===== */
+/* ===== CARROSSEL */
 .carrossel{
 display:flex;
 gap:15px;
 overflow-x:auto;
 }
 
-/* ===== CARD ESCURO ===== */
+/* ===== CARD ESCURO */
 .card{
 min-width:260px;
 background:#222;
@@ -138,7 +138,7 @@ text-align:center;
 color:white;
 }
 
-/* ===== DETALHES FUNDO BRANCO ===== */
+/* ===== DETALHES FUNDO BRANCO */
 .detalhes{
 display:none;
 margin-top:15px;
@@ -202,24 +202,10 @@ const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSTF1_fDqiUJW1xlBws
 let receitas = [];
 let categorias = {};
 
-/* ===== CORREÇÃO AQUI ===== */
-/* Agrupa sabores semelhantes e REMOVE "Outros" */
 function identificarCategoria(sabor){
-if(!sabor) return null;
-
-sabor = sabor.toLowerCase();
-
-if(sabor.includes("chocolate")) return "🍫 Chocolate";
-if(sabor.includes("laranja")) return "🍊 Laranja";
-if(sabor.includes("coco")) return "🥥 Coco";
-if(sabor.includes("banana")) return "🍌 Banana";
-if(sabor.includes("cenoura")) return "🥕 Cenoura";
-if(sabor.includes("limão") || sabor.includes("limao")) return "🍋 Limão";
-
-/* Se não entrar em nenhuma acima, usa o próprio sabor */
-return "🍰 " + sabor.charAt(0).toUpperCase() + sabor.slice(1);
+if(!sabor) return "Sem Categoria";
+return pegarEmoji(sabor) + " " + sabor;
 }
-/* ========================== */
 
 function pegarEmoji(sabor){
 sabor = sabor.toLowerCase();
@@ -243,13 +229,10 @@ linhas.forEach(linha => {
 const col = linha.split(",");
 if(col.length < 10) return;
 
-const categoriaFinal = identificarCategoria(col[1]);
-if(!categoriaFinal) return;
-
 const receita = {
 nome: col[0],
 sabor: col[1],
-categoria: categoriaFinal,
+categoria: identificarCategoria(col[1]),
 tempo: col[3],
 rendimento: col[4],
 dificuldade: col[5],
@@ -283,6 +266,7 @@ mostrarCategorias();
 
 function criarMenu(){
 const menu = document.getElementById("menuCategorias");
+menu.innerHTML="";
 
 const btnTodos = document.createElement("button");
 btnTodos.innerText = "🔥 Todos ("+receitas.length+")";
@@ -346,11 +330,16 @@ det.style.display = det.style.display==="block"?"none":"block";
 return div;
 }
 
+/* 🔥 ALTERAÇÃO AQUI: ORDEM DECRESCENTE */
 function mostrarCategorias(){
 const container = document.getElementById("conteudo");
 container.innerHTML="";
 
-for(const cat in categorias){
+const categoriasOrdenadas = Object.keys(categorias)
+.sort((a,b)=> categorias[b].length - categorias[a].length);
+
+categoriasOrdenadas.forEach(cat=>{
+
 const secao = document.createElement("div");
 secao.className="secao";
 secao.innerHTML=`<h2>${cat}</h2>`;
@@ -364,7 +353,8 @@ carrossel.appendChild(criarCard(r));
 
 secao.appendChild(carrossel);
 container.appendChild(secao);
-}
+
+});
 }
 
 function mostrarUmaCategoria(cat){
